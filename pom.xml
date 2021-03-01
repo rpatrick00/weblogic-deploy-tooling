@@ -144,7 +144,7 @@
                 <plugin>
                     <groupId>io.rhpatrick.mojo</groupId>
                     <artifactId>github-maven-plugin</artifactId>
-                    <version>0.5-SNAPSHOT</version>
+                    <version>0.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.antlr</groupId>
