@@ -117,6 +117,7 @@
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip-system-test-execution}</skip>
                             <rules>
                                 <requireProperty>
                                     <property>mw_home</property>
