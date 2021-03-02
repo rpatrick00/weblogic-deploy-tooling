@@ -19,6 +19,7 @@
         <release-github-repository>rpatrick00/weblogic-deploy-tooling</release-github-repository>
 
         <release-settings-xml-server-id>github</release-settings-xml-server-id>
+        <release-notes-file-name>${project.build.directory}/ReleaseNotes.md</release-notes-file-name>
         <release-installer-stage-dir>${project.build.directory}/installers</release-installer-stage-dir>
         <release-zip-installer-name>${weblogic-deploy-installer-name}.zip</release-zip-installer-name>
         <release-tgz-installer-name>${weblogic-deploy-installer-name}.tar.gz</release-tgz-installer-name>
@@ -39,7 +40,7 @@
                 <plugin>
                     <groupId>io.rhpatrick.mojo</groupId>
                     <artifactId>github-maven-plugin</artifactId>
-                    <version>0.5</version>
+                    <version>0.6</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -108,11 +109,13 @@
                         <goals>
                             <goal>create-release</goal>
                         </goals>
+                        <phase>verify</phase>
                         <configuration>
                             <repositoryId>${release-github-repository}</repositoryId>
                             <serverId>${release-settings-xml-server-id}</serverId>
                             <tag>release-${releaseVersion}</tag>
                             <name>WebLogic Deploy Tooling ${releaseVersion}</name>
+                            <descriptionFile>${release-notes-file-name}</descriptionFile>
                             <draft>true</draft>
                             <assets>
                                 <fileSet>
