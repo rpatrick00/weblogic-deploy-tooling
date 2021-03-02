@@ -50,10 +50,6 @@
         <sonar.test.exclusions>src/test/**</sonar.test.exclusions>
         <unit-test-wlst-dir>${env.WLST_DIR}</unit-test-wlst-dir>
         <skip-system-test-execution>false</skip-system-test-execution>
-
-        <release-installer-stage-dir>${project.build.directory}/installers</release-installer-stage-dir>
-        <release-zip-installer-name>${weblogic-deploy-installer-name}.zip</release-zip-installer-name>
-        <release-tgz-installer-name>${weblogic-deploy-installer-name}.tar.gz</release-tgz-installer-name>
     </properties>
 
     <dependencyManagement>
@@ -287,7 +283,7 @@
                 <configuration>
                     <tagNameFormat>release-@{project.version}</tagNameFormat>
                     <!-- Tell release:perform to stop before trying to push to a remote repository -->
-                    <goals>deploy</goals>
+                    <goals>install</goals>
                 </configuration>
             </plugin>
         </plugins>
@@ -328,78 +324,6 @@
                 <module>installer</module>
                 <module>system-test</module>
             </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <!-- Do not try to deploy the artifacts to a remote Maven repo -->
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>stage-installer-artifacts</id>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${release-installer-stage-dir}</outputDirectory>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>weblogic-deploy-installer</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>zip</type>
-                                            <overWrite>true</overWrite>
-                                            <destFileName>${release-zip-installer-name}</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>weblogic-deploy-installer</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>tar.gz</type>
-                                            <overWrite>true</overWrite>
-                                            <destFileName>${release-tgz-installer-name}</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>io.rhpatrick.mojo</groupId>
-                        <artifactId>github-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>create-draft-github-release</id>
-                                <goals>
-                                    <goal>create-release</goal>
-                                </goals>
-                                <configuration>
-                                    <tag>release-${project.version}</tag>
-                                    <name>WebLogic Deploy Tooling ${project.version}</name>
-                                    <draft>true</draft>
-                                    <overwriteExistingAssets>true</overwriteExistingAssets>
-                                    <assets>
-                                        <fileSet>
-                                            <directory>${release-installer-stage-dir}</directory>
-                                            <includes>
-                                                <include>${release-zip-installer-name}</include>
-                                                <include>${release-tgz-installer-name}</include>
-                                            </includes>
-                                        </fileSet>
-                                    </assets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>
